@@ -22,17 +22,12 @@ def isequation(s: str):
 
 async def apply_punish(user, punish, role_id):
     timeout_role = user.guild.get_role(int(role_id))
-    match punish:
-        case 1:
-            await user.add_roles(timeout_role)
+    await user.add_roles(timeout_role)
+    if punish ==  1:
             await asyncio.sleep(12 * 3600)
             await user.remove_roles(timeout_role)
             return
-        case 2:
-            await user.add_roles(timeout_role)
+    if punish == 2:
             await asyncio.sleep(24 * 3600)
             await user.remove_roles(timeout_role)
-            return
-        case _:
-            await user.add_roles(timeout_role)
             return
