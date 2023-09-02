@@ -126,5 +126,4 @@ dmypy.json
 #PyCharm stuff
 .idea
 
-#Config file
 config.json
