@@ -11,6 +11,7 @@ count = counter.Counter()
 
 allowed_users = []
 
+
 def isEquation(s: str):
     if s == "":
         return 0
@@ -30,6 +31,7 @@ def isEquation(s: str):
     if nb != 0:
         return 2
 
+
 def isNumber(s: str):
     if s == "":
         return 0
@@ -38,6 +40,7 @@ def isNumber(s: str):
         if e < "0" or e > "9":
             return 0
         return 2
+
 
 async def applyPunish(user, punish, role_id):
     timeout_role = user.guild.get_role(int(role_id))
