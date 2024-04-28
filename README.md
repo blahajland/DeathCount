@@ -1,5 +1,3 @@
-<img src="https://cdn.discordapp.com/attachments/1147623385220788305/1147623427587444736/Group_416.png" alt="drawing" width="80%" style="text-align:center"/>
-
 Based on the concept of [this bot](https://countingbot.com/), DeathCount (also known as  **numberhaj**) is a Discord counting bot that punishes players 
 
 ## How does it work ?
@@ -30,10 +28,10 @@ Alonside this, multiple commands, only available for some roles (see below), wil
 	- `discord`
 		- `pip install discord`
 3. Fill the **config.json** file with all the infos needed
-	- DEBUG (int) : a number ranging between 0 and 1, lets you activate debug commands
-  	- TOKEN (str) : your bot token
-    - CHANNEL (str) : the channel in which the counting minigame takes place
-    - TIMEOUTROLE (str) : the ID of the timeout role
-  	- MODROLES (str[]) : a list of the roles ID allowed to use the commands listed above
+	- `DEBUG` (int) : a number ranging between 0 and 1, lets you activate debug commands
+	- `TOKEN` (str) : your bot token
+	- `CHANNEL` (str) : the channel in which the counting minigame takes place
+	- `TIMEOUTROLE` (str) : the ID of the timeout role
+  	- `MODROLES` (str[]) : a list of the roles ID allowed to use the commands listed above
 
 4. Run the bot with the following command : `cd /path/to/bot && python3 main.py`
