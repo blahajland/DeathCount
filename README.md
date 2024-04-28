@@ -1,3 +1,5 @@
+# DeathCount (tbu)
+
 Based on the concept of [this bot](https://countingbot.com/), DeathCount (also known as  **numberhaj**) is a Discord counting bot that punishes players 
 
 ## How does it work ?
