@@ -1,18 +1,18 @@
-import { counter, DEFAULT_BASE_VALUE } from '../../counter/counter'
+import { counter } from '../../counter/counter'
 import {
     DiscordCommand,
     DiscordUserPermission,
 } from '../../factory/commands-types'
 
 export default {
-    name: 'reset',
-    description: `[MOD] Go back to ${DEFAULT_BASE_VALUE}.`,
+    name: 'resurrect',
+    description: '[MOD] Gives your guild another chance.',
     options: [],
     permissions: DiscordUserPermission.ADMIN,
     handler: async interaction => {
-        counter.reset()
+        counter.resurrect()
         await interaction.reply({
-            content: `As you wish. Going back to **${DEFAULT_BASE_VALUE}**. The next number is **${DEFAULT_BASE_VALUE + 1}**`,
+            content: `As you wish. Going back to **${counter.value}**. The next number is **${counter.value + 1}**.`,
             ephemeral: false,
         })
     },

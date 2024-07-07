@@ -1,50 +1,57 @@
-import {Client, GatewayIntentBits} from 'discord.js';
-import {CHANNEL, TOKEN} from "./env";
-import {commands, syncDiscordCommands} from "./factory/commands_factory";
-import {applyPunishment, isEquation, isNumber} from "./tools/functions";
-import {counter, ValueEvolution} from "./counter/counter";
+import { Client, GatewayIntentBits } from 'discord.js'
+import { CHANNEL, TOKEN } from './tools/env'
+import { commands, syncDiscordCommands } from './factory/commands-factory'
+import { applyPunishment, isEquation, isNumber } from './tools/functions'
+import { counter, ValueEvolution } from './counter/counter'
+import consola from 'consola'
 
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessageReactions
+    GatewayIntentBits.GuildMessageReactions,
 ]
 const client = new Client({
-    intents: intents
-});
+    intents: intents,
+})
 
 client.on('ready', () => {
-    if (!client.user) return
-    console.log(`Logged in as ${client.user.username}`)
+    if (!client.user) throw new Error("The bot can't connect as a user.")
+    consola.info(`Logged in as ${client.user.username}`)
 })
 
-client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return
-    commands.get(interaction.commandName)?.execute(interaction)
+client.on('interactionCreate', async interaction => {
+    if (interaction.isCommand()) {
+        const command = commands.get(interaction.commandName)
+        if (!command) throw new Error("This command doesn't exist")
+        await command.execute(interaction)
+    }
 })
 
-client.on('messageCreate', async (message) => {
-    if (!client.user) return
-    if (message.author.bot) return
-    if (message.channel.id !== CHANNEL) return
+client.on('messageCreate', async message => {
+    if (!client.user) throw new Error("Unable to access the bot's user.")
+    if (message.author.bot || message.channel.id !== CHANNEL) return
     const messageContent = message.content
     if (isEquation(messageContent))
         await message.reply({
-            content: "**We don't want equations !** Remember, mods can reserve the right to **manually timeout** you..."
+            content:
+                "**We don't want equations !** Remember, mods can reserve the right to **manually timeout** you...",
         })
 
     if (isNumber(messageContent)) {
         const value = Number(messageContent.trim())
-        if (!message.guild) return
-        const member = message.guild.members.cache.find((m) => m.id === message.author.id)
-        if (!member) return
+        if (!message.guild)
+            throw new Error("This message hasn't been sent in a guild.")
+        const member = message.guild.members.cache.find(
+            m => m.id === message.author.id,
+        )
+        if (!member) throw new Error('Unable to find a valid guild member.')
         switch (counter.increment(value, member)) {
             case ValueEvolution.FAIL:
                 await message.react('⛔')
                 await message.reply({
-                    content: `<@${member.id}> ruined it at **${counter.lastValue + 1}**. As a result, we're starting back at **1**. Shame on them !`
+                    content: `<@${member.id}> ruined it at **${counter.lastValue + 1}**. As a result, we're starting back at **1**. Shame on them !`,
                 })
                 await applyPunishment(member)
                 break
@@ -58,7 +65,8 @@ client.on('messageCreate', async (message) => {
                 await message.react('✅')
                 break
             default:
-                throw new Error()
+                await message.react('💥')
+                throw new Error('Unknown value evolution.')
         }
     }
 })
