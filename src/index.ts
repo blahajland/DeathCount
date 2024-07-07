@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { CHANNEL, TOKEN } from './tools/env'
+import { COUNTING_CHANNEL, TOKEN } from './tools/env'
 import { commands, syncDiscordCommands } from './factory/commands-factory'
 import { applyPunishment, isEquation, isNumber } from './tools/functions'
 import { counter, ValueEvolution } from './counter/counter'
@@ -31,7 +31,7 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async message => {
     if (!client.user) throw new Error("Unable to access the bot's user.")
-    if (message.author.bot || message.channel.id !== CHANNEL) return
+    if (message.author.bot || message.channel.id !== COUNTING_CHANNEL) return
     const messageContent = message.content
     if (isEquation(messageContent))
         await message.reply({

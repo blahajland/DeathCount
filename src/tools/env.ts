@@ -4,13 +4,23 @@ import dotenv from 'dotenv'
 dotenv.config()
 const TOKEN = process.env['DISCORD_TOKEN'] ?? ''
 if (!TOKEN) throw new Error('No token found.')
-const CLIENT = process.env['DISCORD_CLIENT_ID'] ?? ''
-if (!CLIENT) throw new Error('No client found.')
-const DEBUG = (process.env['DEBUG_MODE'] ?? '0') === '1'
-const CHANNEL = process.env['COUNTING_CHANNEL'] ?? ''
-if (!CHANNEL) throw new Error('No channel found.')
+const DISCORD_CLIENT_ID = process.env['DISCORD_CLIENT_ID'] ?? ''
+if (!DISCORD_CLIENT_ID) throw new Error('No client found.')
+const DEBUG_MODE = (process.env['DEBUG_MODE'] ?? '0') === '1'
+const COUNTING_CHANNEL = process.env['COUNTING_CHANNEL'] ?? ''
+if (!COUNTING_CHANNEL) throw new Error('No channel found.')
 const TIMEOUT_ROLE = process.env['TIMEOUT_ROLE'] ?? ''
 const MOD_ROLES = (process.env['MOD_ROLES'] ?? '').split('+')
-const GUILD = process.env['GUILD_ID'] ?? ''
+const GUILD_ID = process.env['GUILD_ID'] ?? ''
+const PASS_UPDATE = (process.env['PASS_UPDATE'] ?? '0') === '1'
 
-export { TOKEN, CLIENT, DEBUG, CHANNEL, TIMEOUT_ROLE, MOD_ROLES, GUILD }
+export {
+    TOKEN,
+    DISCORD_CLIENT_ID,
+    DEBUG_MODE,
+    COUNTING_CHANNEL,
+    TIMEOUT_ROLE,
+    MOD_ROLES,
+    GUILD_ID,
+    PASS_UPDATE,
+}

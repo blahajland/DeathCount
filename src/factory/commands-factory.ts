@@ -4,7 +4,13 @@ import {
     Routes,
     SlashCommandBuilder,
 } from 'discord.js'
-import { CLIENT, DEBUG, GUILD, TOKEN } from '../tools/env'
+import {
+    DISCORD_CLIENT_ID,
+    DEBUG_MODE,
+    GUILD_ID,
+    TOKEN,
+    PASS_UPDATE,
+} from '../tools/env'
 import { assertIsMod } from '../tools/mods'
 import { directoryImport } from 'directory-import'
 import {
@@ -110,17 +116,20 @@ const assignOptions = (builder: SlashCommandBuilder, option: DiscordOption) => {
 }
 
 export const syncDiscordCommands = async () => {
-    const canUpdateCommands = await consola.prompt('Update commands ?', {
-        type: 'confirm',
-    })
+    let canUpdateCommands = false
+    if (!PASS_UPDATE)
+        canUpdateCommands = await consola.prompt('Update commands ?', {
+            type: 'confirm',
+        })
     const commandsAsBody: object[] = []
     directoryImport('../commands/', (moduleName, modulePath, moduleData) => {
-        if (!modulePath.startsWith('/debug') || DEBUG) {
+        if (!modulePath.startsWith('/debug') || DEBUG_MODE) {
             const command = addDiscordCommand(
                 (moduleData as { default: object }).default as DiscordCommand,
             )
             if (canUpdateCommands) {
-                if (DEBUG) consola.log(`- ${command.data.name} - ${modulePath}`)
+                if (DEBUG_MODE)
+                    consola.log(`- ${command.data.name} - ${modulePath}`)
                 commandsAsBody.push(command.data.toJSON())
             }
         }
@@ -129,7 +138,7 @@ export const syncDiscordCommands = async () => {
         consola.start('Started refreshing application (/) commands.')
         const data = (await new REST({ version: '10' })
             .setToken(TOKEN)
-            .put(Routes.applicationGuildCommands(CLIENT, GUILD), {
+            .put(Routes.applicationGuildCommands(DISCORD_CLIENT_ID, GUILD_ID), {
                 body: commandsAsBody,
             })) as object[]
         consola.success(
