@@ -5,6 +5,8 @@ import { applyPunishment, isEquation, isNumber } from './tools/functions'
 import { counter, ValueEvolution } from './counter/counter'
 import consola from 'consola'
 
+consola.start('Starting NumberHaj...')
+
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -12,6 +14,7 @@ const intents = [
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessageReactions,
 ]
+
 const client = new Client({
     intents: intents,
 })
@@ -48,12 +51,26 @@ client.on('messageCreate', async message => {
         )
         if (!member) throw new Error('Unable to find a valid guild member.')
         switch (counter.increment(value, member)) {
-            case ValueEvolution.FAIL:
+            case ValueEvolution.FAIL_COUNT:
                 await message.react('⛔')
                 await message.reply({
                     content: `<@${member.id}> ruined it at **${counter.lastValue + 1}**. As a result, we're starting back at **1**. Shame on them !`,
                 })
-                await applyPunishment(member)
+                await applyPunishment(member, counter.fails.get(member.id) ?? 1)
+                break
+            case ValueEvolution.FAIL_USER:
+                await message.react('⛔')
+                await message.reply({
+                    content: `<@${member.id}> counted twice in a row. As a result, we're starting back at **1**. Shame on them !`,
+                })
+                await applyPunishment(member, counter.fails.get(member.id) ?? 1)
+                break
+            case ValueEvolution.SABOTAGE:
+                await message.react('🤨')
+                await message.reply({
+                    content: `<@${member.id}> tried to **SABOTAGE** the count! You fu\\*\\*\\*\\*.`,
+                })
+                await applyPunishment(member, 14) // One week
                 break
             case ValueEvolution.MILESTONE:
                 await message.react('💯')

@@ -12,7 +12,10 @@ if (!COUNTING_CHANNEL) throw new Error('No channel found.')
 const TIMEOUT_ROLE = process.env['TIMEOUT_ROLE'] ?? ''
 const MOD_ROLES = (process.env['MOD_ROLES'] ?? '').split('+')
 const GUILD_ID = process.env['GUILD_ID'] ?? ''
-const PASS_UPDATE = (process.env['PASS_UPDATE'] ?? '0') === '1'
+const UPDATE = (Number(process.env['UPDATE']) ?? 0) % 3
+// 0 : ask
+// 1 : yes
+// 2 : no
 
 export {
     TOKEN,
@@ -22,5 +25,5 @@ export {
     TIMEOUT_ROLE,
     MOD_ROLES,
     GUILD_ID,
-    PASS_UPDATE,
+    UPDATE,
 }

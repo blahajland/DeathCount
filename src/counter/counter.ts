@@ -2,11 +2,15 @@ import { GuildMember } from 'discord.js'
 
 export const DEFAULT_BASE_VALUE = 0
 
+export const DEFAULT_LEEWAY = 3
+
 export enum ValueEvolution {
     PASS,
-    FAIL,
+    FAIL_COUNT,
+    FAIL_USER,
     BEST,
     MILESTONE,
+    SABOTAGE,
 }
 
 class Counter {
@@ -17,14 +21,21 @@ class Counter {
     public fails = new Map<string, number>()
 
     increment(nb: number, user: GuildMember): ValueEvolution {
-        if (nb !== this.value + 1 || user.id === this.lastUser)
-            return this.manageFailure(user)
+        //If fail
+        const fail = this.getFailType(nb, user)
+        if (fail !== ValueEvolution.PASS) {
+            this.manageFailure(user)
+            return fail
+        }
+
+        //If Ok
         this.value += 1
         this.lastUser = user.id
+
+        //If special event
         if (this.updateBest()) return ValueEvolution.BEST
-        return this.isMilestone(this.value)
-            ? ValueEvolution.MILESTONE
-            : ValueEvolution.PASS
+        if (this.isMilestone()) return ValueEvolution.MILESTONE
+        return ValueEvolution.PASS
     }
 
     setValue(value: number) {
@@ -54,23 +65,35 @@ class Counter {
                 throw new Error("Unable to find the user's fail count.")
             this.fails.set(user.id, failsNb)
         }
-        return ValueEvolution.FAIL
     }
 
     private updateBest() {
-        if (this.isBest(this.value)) {
+        if (this.isBest()) {
             this.best = this.value
             return true
         }
         return false
     }
 
-    private isBest(value: number) {
-        return value > this.best
+    private isBest() {
+        return this.value > this.best
     }
 
-    private isMilestone(value: number) {
-        return value % 100 === 0
+    private isMilestone() {
+        return this.value % 100 === 0
+    }
+
+    private getFailType(nb: number, user: GuildMember): ValueEvolution {
+        switch (true) {
+            case Math.abs(nb - this.value) > DEFAULT_LEEWAY:
+                return ValueEvolution.SABOTAGE
+            case nb !== this.value + 1:
+                return ValueEvolution.FAIL_COUNT
+            case user.id === this.lastUser:
+                return ValueEvolution.FAIL_USER
+            default:
+                return ValueEvolution.PASS
+        }
     }
 }
 

@@ -5,11 +5,11 @@ import {
     SlashCommandBuilder,
 } from 'discord.js'
 import {
-    DISCORD_CLIENT_ID,
     DEBUG_MODE,
+    DISCORD_CLIENT_ID,
     GUILD_ID,
     TOKEN,
-    PASS_UPDATE,
+    UPDATE,
 } from '../tools/env'
 import { assertIsMod } from '../tools/mods'
 import { directoryImport } from 'directory-import'
@@ -116,8 +116,8 @@ const assignOptions = (builder: SlashCommandBuilder, option: DiscordOption) => {
 }
 
 export const syncDiscordCommands = async () => {
-    let canUpdateCommands = false
-    if (!PASS_UPDATE)
+    let canUpdateCommands = UPDATE === 1
+    if (UPDATE === 0)
         canUpdateCommands = await consola.prompt('Update commands ?', {
             type: 'confirm',
         })
