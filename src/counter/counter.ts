@@ -8,9 +8,9 @@ export enum ValueEvolution {
     PASS,
     FAIL_COUNT,
     FAIL_USER,
+    SABOTAGE,
     BEST,
     MILESTONE,
-    SABOTAGE,
 }
 
 class Counter {
@@ -18,7 +18,7 @@ class Counter {
     public best = 0
     public lastValue = 0
     public lastUser = ''
-    public fails = new Map<string, number>()
+    public fails = new Map<string, { value: number }>()
 
     increment(nb: number, user: GuildMember): ValueEvolution {
         //If fail
@@ -33,9 +33,10 @@ class Counter {
         this.lastUser = user.id
 
         //If special event
-        if (this.updateBest()) return ValueEvolution.BEST
-        if (this.isMilestone()) return ValueEvolution.MILESTONE
-        return ValueEvolution.PASS
+        let ret = ValueEvolution.PASS
+        if (this.updateBest()) ret = ValueEvolution.BEST
+        if (this.value % 100 === 0) ret = ValueEvolution.MILESTONE
+        return ret
     }
 
     setValue(value: number) {
@@ -57,30 +58,19 @@ class Counter {
         this.lastValue = this.value
         this.value = 0
         this.lastUser = ''
-        if (!this.fails.has(user.id)) {
-            this.fails.set(user.id, 1)
-        } else {
-            const failsNb = this.fails.get(user.id)
-            if (!failsNb)
-                throw new Error("Unable to find the user's fail count.")
-            this.fails.set(user.id, failsNb)
-        }
+        if (!this.fails.has(user.id)) this.fails.set(user.id, { value: 0 })
+        const failsNb = this.fails.get(user.id)
+        if (!failsNb)
+            throw new Error(
+                "Unable to find the user's fail count. This shouldn't happen.",
+            )
+        failsNb.value += 1
     }
 
     private updateBest() {
-        if (this.isBest()) {
-            this.best = this.value
-            return true
-        }
-        return false
-    }
-
-    private isBest() {
-        return this.value > this.best
-    }
-
-    private isMilestone() {
-        return this.value % 100 === 0
+        const isBest = this.value > this.best
+        if (isBest) this.best = this.value
+        return isBest
     }
 
     private getFailType(nb: number, user: GuildMember): ValueEvolution {

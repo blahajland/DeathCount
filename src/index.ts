@@ -56,14 +56,14 @@ client.on('messageCreate', async message => {
                 await message.reply({
                     content: `<@${member.id}> ruined it at **${counter.lastValue + 1}**. As a result, we're starting back at **1**. Shame on them !`,
                 })
-                await applyPunishment(member, counter.fails.get(member.id) ?? 1)
+                await applyPunishment(member, counter.fails.get(member.id)?.value ?? 1)
                 break
             case ValueEvolution.FAIL_USER:
                 await message.react('⛔')
                 await message.reply({
                     content: `<@${member.id}> counted twice in a row. As a result, we're starting back at **1**. Shame on them !`,
                 })
-                await applyPunishment(member, counter.fails.get(member.id) ?? 1)
+                await applyPunishment(member, counter.fails.get(member.id)?.value ?? 1)
                 break
             case ValueEvolution.SABOTAGE:
                 await message.react('🤨')
