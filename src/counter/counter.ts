@@ -22,7 +22,7 @@ class Counter {
 
     increment(nb: number, user: GuildMember): ValueEvolution {
         //If fail
-        const fail = this.getFailType(nb, user)
+        const fail = this.getEvolutionFailType(nb, user)
         if (fail !== ValueEvolution.PASS) {
             this.manageFailure(user)
             return fail
@@ -37,6 +37,11 @@ class Counter {
         if (this.updateBest()) ret = ValueEvolution.BEST
         if (this.value % 100 === 0) ret = ValueEvolution.MILESTONE
         return ret
+    }
+
+    getFailNumber(user: GuildMember): number {
+        const fails = this.fails.get(user.id)
+        return !fails ? 0 : fails.value
     }
 
     setValue(value: number) {
@@ -73,7 +78,10 @@ class Counter {
         return isBest
     }
 
-    private getFailType(nb: number, user: GuildMember): ValueEvolution {
+    private getEvolutionFailType(
+        nb: number,
+        user: GuildMember,
+    ): ValueEvolution {
         switch (true) {
             case Math.abs(nb - this.value) > DEFAULT_LEEWAY:
                 return ValueEvolution.SABOTAGE

@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits } from 'discord.js'
 import { COUNTING_CHANNEL, TOKEN } from './tools/env'
 import { commands, syncDiscordCommands } from './factory/commands-factory'
-import { applyPunishment, isEquation, isNumber } from './tools/functions'
+import { applyPunishment, processEquation } from './tools/functions'
 import { counter, ValueEvolution } from './counter/counter'
 import consola from 'consola'
 
@@ -36,14 +36,8 @@ client.on('messageCreate', async message => {
     if (!client.user) throw new Error("Unable to access the bot's user.")
     if (message.author.bot || message.channel.id !== COUNTING_CHANNEL) return
     const messageContent = message.content
-    if (isEquation(messageContent))
-        await message.reply({
-            content:
-                "**We don't want equations !** Remember, mods can reserve the right to **manually timeout** you...",
-        })
-
-    if (isNumber(messageContent)) {
-        const value = Number(messageContent.trim())
+    const value = processEquation(messageContent.trim())
+    if (value) {
         if (!message.guild)
             throw new Error("This message hasn't been sent in a guild.")
         const member = message.guild.members.cache.find(
@@ -56,14 +50,14 @@ client.on('messageCreate', async message => {
                 await message.reply({
                     content: `<@${member.id}> ruined it at **${counter.lastValue + 1}**. As a result, we're starting back at **1**. Shame on them !`,
                 })
-                await applyPunishment(member, counter.fails.get(member.id)?.value ?? 1)
+                await applyPunishment(member, counter.getFailNumber(member))
                 break
             case ValueEvolution.FAIL_USER:
                 await message.react('⛔')
                 await message.reply({
                     content: `<@${member.id}> counted twice in a row. As a result, we're starting back at **1**. Shame on them !`,
                 })
-                await applyPunishment(member, counter.fails.get(member.id)?.value ?? 1)
+                await applyPunishment(member, counter.getFailNumber(member))
                 break
             case ValueEvolution.SABOTAGE:
                 await message.react('🤨')

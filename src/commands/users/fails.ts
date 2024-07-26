@@ -5,16 +5,21 @@ import {
 } from '../../factory/commands-types'
 import { EmbedBuilder } from 'discord.js'
 
+interface FailureInfo {
+    name: string
+    value: string
+}
+
 export default {
     name: 'fails',
     description: 'Shows a list of all the users who failed at basic math.',
     permissions: DiscordUserPermission.USER,
     options: [],
     handler: async interaction => {
-        const failures: { name: string; value: string }[] = []
+        const failures: FailureInfo[] = []
         counter.fails.forEach((v, e) => {
             failures.push({
-                name: `Has failed ${v} times`,
+                name: `Has failed ${v.value} times`,
                 value: `<@${e}>`,
             })
         })

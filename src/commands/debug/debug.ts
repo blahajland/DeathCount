@@ -6,6 +6,11 @@ import {
 } from '../../factory/commands-types'
 import consola from 'consola'
 
+interface RoleInfo {
+    name: string
+    id: string
+}
+
 export default {
     name: 'debug',
     description: '[DEBUG] Gives a bunch of useful information',
@@ -25,7 +30,7 @@ export default {
         let modRoles = ''
         let isMod = false
 
-        rolesManager.cache.forEach((e: { name: string; id: string }) => {
+        rolesManager.cache.forEach((e: RoleInfo) => {
             userRoles += `- **${e.name}** (${e.id})\n`
             if (MOD_ROLES.includes(e.id)) isMod = true
         })
