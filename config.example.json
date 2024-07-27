@@ -1,0 +1,15 @@
+{
+  "discordToken": "0",
+  "discordClientId": "0",
+  "debugMode": false,
+  "countingChannel": "0",
+  "timeoutRole": "0",
+  "modRoles": [
+    "0",
+    "0",
+    "0"
+  ],
+  "guildId": "0",
+  "updatePrompt": 0,
+  "allowEquations": false
+}

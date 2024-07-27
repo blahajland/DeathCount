@@ -1,5 +1,5 @@
 import { EmbedBuilder, GuildMemberRoleManager } from 'discord.js'
-import { MOD_ROLES } from '../../tools/env'
+import { MOD_ROLES } from '../../tools/config'
 import {
     DiscordCommand,
     DiscordUserPermission,

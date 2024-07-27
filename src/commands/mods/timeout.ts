@@ -1,4 +1,4 @@
-import { TIMEOUT_ROLE } from '../../tools/env'
+import { TIMEOUT_ROLE } from '../../tools/config'
 import { sleep } from '../../tools/functions'
 import {
     DiscordCommand,

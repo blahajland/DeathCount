@@ -9,8 +9,8 @@ import {
     DISCORD_CLIENT_ID,
     GUILD_ID,
     TOKEN,
-    UPDATE,
-} from '../tools/env'
+    UPDATE_PROMPT,
+} from '../tools/config'
 import { assertIsMod } from '../tools/mods'
 import { directoryImport } from 'directory-import'
 import {
@@ -116,8 +116,8 @@ const assignOptions = (builder: SlashCommandBuilder, option: DiscordOption) => {
 }
 
 export const syncDiscordCommands = async () => {
-    let canUpdateCommands = UPDATE === 1
-    if (UPDATE === 0)
+    let canUpdateCommands = UPDATE_PROMPT === 1
+    if (UPDATE_PROMPT === 0)
         canUpdateCommands = await consola.prompt('Update commands ?', {
             type: 'confirm',
         })

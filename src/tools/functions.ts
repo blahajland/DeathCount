@@ -1,10 +1,13 @@
 import { GuildMember } from 'discord.js'
-import { TIMEOUT_ROLE } from './env'
+import { ALLOW_EQUATIONS, TIMEOUT_ROLE } from './config'
 
 export const sleep = async (seconds: number) =>
     new Promise(resolve => setTimeout(resolve, seconds * 1000))
 
-const isValidEntry = /^(\d+)\s?(?:([+\-*\/^])\s?(\d+))?$/
+const withoutEquation = /^(\d+)$/
+const withEquation = /^(\d+)\s?(?:([+\-*\/^])\s?(\d+))?$/
+
+const isValidEntry = ALLOW_EQUATIONS ? withEquation : withoutEquation
 
 export const processEquation = (value: string) => {
     const matches = isValidEntry.exec(value)

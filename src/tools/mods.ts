@@ -1,5 +1,5 @@
 import { CommandInteraction, GuildMemberRoleManager } from 'discord.js'
-import { MOD_ROLES } from './env'
+import { MOD_ROLES } from './config'
 
 const allowedUsers: string[] = []
 

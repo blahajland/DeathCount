@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { COUNTING_CHANNEL, TOKEN } from './tools/env'
+import { COUNTING_CHANNEL, TOKEN } from './tools/config'
 import { commands, syncDiscordCommands } from './factory/commands-factory'
 import { applyPunishment, processEquation } from './tools/functions'
 import { counter, ValueEvolution } from './counter/counter'
