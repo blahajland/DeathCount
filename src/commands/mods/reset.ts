@@ -12,7 +12,7 @@ export default {
     handler: async interaction => {
         counter.reset()
         await interaction.reply({
-            content: `As you wish. Going back to **${DEFAULT_BASE_VALUE}**. The next number is **${DEFAULT_BASE_VALUE + 1}**`,
+            content: `As you wish. Going back to **${DEFAULT_BASE_VALUE}**. The next number is **${DEFAULT_BASE_VALUE + 1}**.`,
             ephemeral: false,
         })
     },

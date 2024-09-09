@@ -21,7 +21,7 @@ export default {
         const value = interaction.options.get('value', true).value as number
         counter.setValue(value)
         await interaction.reply({
-            content: `As you wish. Going straight to **${value}**. The next number is **${value + 1}**`,
+            content: `As you wish. Going straight to **${value}**. The next number is **${value + 1}**.`,
             ephemeral: false,
         })
     },

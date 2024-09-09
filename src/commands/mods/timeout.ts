@@ -35,7 +35,7 @@ export default {
             throw new Error('Unable to find a valid member/role.')
         await member.roles.add(role)
         await interaction.reply({
-            content: `<@${member.id}> has been timed out for **${time}** minutes`,
+            content: `<@${member.id}> has been timed out for **${time}** minutes.`,
             ephemeral: false,
         })
         await sleep(60 * time)
